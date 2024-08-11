@@ -111,7 +111,7 @@
         }
         .reader-content {
             width: 100%;
-            height: 200px;
+            height: 50%;
             border: 1px solid black;
         }
         /*
@@ -168,6 +168,10 @@
             font-weight: bold;
             font-size: 16px;
         }
+        .spanningup_span{
+            width: 100%;
+            height: 20px;
+        }
     </style>
     <!-- <link rel="stylesheet" href="style_read.css"> -->
 </head>
@@ -194,11 +198,11 @@
                 <!-- 댓글 작성란 -->
                 <div class="reader">
                     <div class="reader-title">
-                        <label for="title"><%= datas[i].title %></label>
+                        <label for="title">제목 | <%= datas.title %></label>
                     </div>
 
                     <div class="reader-author">
-                        <label for="author"><%= datas[i].writer %></label>
+                        <label for="author">작성자 | <%= datas.writer %></label>
                     </div>
 
                     <a href="read.html" class="row item">
@@ -206,19 +210,32 @@
 
                     </a>
                         
-                    <label for="content">본문</label>
+                    <label for="content"></label>
                     <div class="reader-content">
-                        <span laceholder="본문 내용을 입력하세요." contenteditable="true" id="contentEditor"><%= datas[i].content %></span>
+                        <div class="spanningup_span"></div>
+                        <span laceholder="본문 내용을 입력하세요." id="contentEditor">
+                            <%- datas.content %>
+                        </span>
+                        <% for(var i=0;i<link.length;i++){ %>
+                            <br><br><div style="display: block; width: 20%; text-align: left; margin-left: 5%; ">
+                                <% if (link[i].endsWith('.mp4')) { %>
+                                    <video controls style="max-width: 100%;">
+                                        <source src="<%- link[i] %>" type="video/mp4">
+                                    </video>
+                                <% } else if (link[i].endsWith('.jpg') || link[i].endsWith('.jpeg') || link[i].endsWith('.png') || link[i].endsWith('.gif')) { %>
+                                    <img src="<%- link[i] %>" alt="Image" style="max-width: 100%; height: auto;">
+                                <% } %>
+                            </div><br><br><br>
+                        <% } %>
                     </div>
-                    <a class="row item"><div class="col_date"><%= datas[i].regdate %></div></a>
+                    <a class="row item"><div class="col_date"><%= datas.regdate %></div></a>
                 </div>
 
                 <!-- 게시판 -->
                 <div class="post" id="post">
                     <div class="pagination">
-                        <a href="./view?id=<%= datas[i].next_id %>">&lt; 이전 글</a>
-                        <a href="/write">( 게시글 쓰기 )</a>
-                        <a href="./view?id=<%= datas[i].prev_id %>">&lt; 다음 글 &gt;</a>
+                        <a href="./listpage?page=1">&lt; 전체 글</a>
+                        <a href="<%= address_host %>/write">( 게시글 쓰기 )</a>
                     </div>
                 </div>
             </div>
@@ -226,11 +243,13 @@
         <div class="footer"></div>
         <script src="https://cdn.jsdelivr.net/npm/lz-string@1.4.4/libs/lz-string.min.js"></script>
         <script>
-            contentload=function(){
-            const dom=document.getElementById("contentboxbox");
-            dom.innerHTML="";
-            dom.innerHTML+=+"<span>"+datas[i].content+"</span>";
-            }
+            
+
+            // contentload=function(){
+            // const dom=document.getElementById("contentboxbox");
+            // dom.innerHTML="";
+            // dom.innerHTML+=+"<span>"+datas[i].content+"</span>";
+            // }
             /*
             const { compress, decompress } = require('shrink-string')
             console.log("해독 시작");
