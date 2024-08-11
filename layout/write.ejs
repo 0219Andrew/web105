@@ -203,8 +203,6 @@ li {
 }
 
     </style>
-    <!-- <link rel="stylesheet" href="write.css"> -->
-    <script src="https://cdn.jsdelivr.net/npm/lz-string@1.4.4/libs/lz-string.min.js"></script>
 </head>
 
 <body>
@@ -238,14 +236,26 @@ li {
                 </div>
 
                 <div class="upload_">
+                    <textarea name="textarea" id="myTextarea" cols="30" rows="10"></textarea>
+                    <label for="upload">업로드(최대 5개)</label>
+                    <input type="file" id="upload" hidden/>
+                    <!--
                     <div class="upload" id="imageUpload">
                         <label class="label" id="label" for="input">
                             <div class="inner" id="inner">이미지 업로드</div>
                         </label>
                         <input id="imageInput" class="input" accept="image/*" type="file" multiple="true">
                     </div>
+                    -->
                 </div>
+                <div id="secret room">
                 <input id="content-input" name="content" style="display:none">
+                <input id="link1" name="link1" style="display:none" type="text">
+                <input id="link2" name="link2" style="display:none" type="text">
+                <input id="link3" name="link3" style="display:none" type="text">
+                <input id="link4" name="link4" style="display:none" type="text">
+                <input id="link5" name="link5" style="display:none" type="text">
+                </div>
             </form>
                 <div><button class="upload_button" onclick="submitForm()">게시</button></div>
             </div>
@@ -258,12 +268,108 @@ li {
     </div>
 
     <script>
-        alert("로그인하지 않고 글 작성 시 글이 날아가요! 로그인 했는지 안했는지 확인하는 코드 짜기 힘드니까 로그인 한 번만 더 하세요.");
+        let num=0;
+        const lin1 = document.getElementById("link1");
+        const lin2 = document.getElementById("link2");
+        const lin3 = document.getElementById("link3");
+        const lin4 = document.getElementById("link4");
+        const lin5 = document.getElementById("link5");
+        
+        function uploadFile() {
+        const textarea = document.getElementById("myTextarea");
+        const fileInput = document.getElementById("upload");
+    
+        const upload = (file) => {
+            if (file && file.size < 5e6) {
+                const formData = new FormData();
+    
+                formData.append("image", file);
+                fetch("https://api.imgur.com/3/image", {
+                    method: "POST",
+                    headers: {
+                        Authorization: "Client-ID 358bad794526e6b",
+                        Accept: "application/json",
+                    },
+                    body: formData,
+                })
+                    .then((response) => response.json())
+                    .then((response) => {
+                        if (response.success) {
+                            const { data } = response;
+                            textarea.value += `${textarea.value ? "\n" : ""}${
+                                data.animated && data.mp4 ? data.mp4 : data.link
+                            }`;
+                            console.log('링크: '+response.data.link);
+                            if(num==0)
+                                lin1.value=response.data.link;
+                            else if(num==1)
+                                lin2.value=response.data.link;
+                            else if(num==2)
+                                lin3.value=response.data.link;
+                            else if(num==3)
+                                lin4.value=response.data.link;
+                            else if(num==4)
+                                lin5.value=response.data.link;
+                            console.log("lin12345 : "+lin1.value+lin2.value+lin3.value+lin4.value+lin5.value);
+                            num++;
+                        } else {
+                            console.error("업로드 실패");
+                        }
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            } else {
+                console.error("파일 용량 초과");
+            }
+        };
+    
+        const handleDrop = (event) => {
+            event.preventDefault();
+    
+            const { files } = event.dataTransfer;
+    
+            if (files.length) {
+                upload(files[0]);
+            }
+        };
+    
+        const handlePaste = (event) => {
+            event.preventDefault();
+    
+            const { files } = event.clipboardData;
+    
+            if (files.length) {
+                upload(files[0]);
+            }
+        };
+    
+        const preventDefault = (event) => {
+            event.preventDefault();
+        };
+    
+        if (fileInput) {
+            fileInput.addEventListener("change", () => {
+                upload(fileInput.files[0]);
+            });
+        }
+    
+        if (textarea) {
+            textarea.addEventListener("dragenter", preventDefault);
+            textarea.addEventListener("dragleave", preventDefault);
+            textarea.addEventListener("dragover", preventDefault);
+            textarea.addEventListener("drop", handleDrop);
+            textarea.addEventListener("paste", handlePaste);
+        }
+    }
+    uploadFile();
+    
+
         function validateForm() {
             const iddom = document.getElementById("title-input");
             const contentdom = document.getElementById("contentEditor");
             const passworddom = document.getElementById("content-input");
-            passworddom.value=contentdom.innerHTML;
+            passworddom.value=contentdom.innerHTML.replace("<br>", "</span><br><span>");
             const title = iddom.value.trim();
             const content = passworddom.value;
             console.log("content: "+content);
@@ -291,48 +397,6 @@ li {
         function submitForm() {
             if (validateForm()) {
                 document.getElementById("form").submit();
-            }
-        }
-
-
-
-        const contentEditor = document.getElementById('contentEditor');
-        const contenttextarea = document.getElementById('ppp');
-
-        // 이미지 파일을 선택하거나 드롭하면 처리
-        document.getElementById('imageInput').addEventListener('change', handleFiles);
-        document.getElementById('imageUpload').addEventListener('dragover', handleDragOver);
-        document.getElementById('imageUpload').addEventListener('drop', (event) => handleDrop(event, 'image'));
-
-        // 비디오 파일을 선택하거나 드롭하면 처리
-        document.getElementById('videoInput').addEventListener('change', handleFiles);
-        document.getElementById('videoUpload').addEventListener('dragover', handleDragOver);
-        document.getElementById('videoUpload').addEventListener('drop', (event) => handleDrop(event, 'video'));
-
-        function handleDragOver(event) {
-            event.preventDefault();
-        }
-
-        function handleDrop(event, type) {
-            event.preventDefault();
-            const files = event.dataTransfer.files;float: left;
-            if (files.length > 0) {
-                handleFiles({ target: { files: files } }, type);
-            }
-        }
-
-        function handleFiles(event, type) {
-            const files = event.target.files;
-            for (let file of files) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    let mediaTag = '';
-                    if (file.type.startsWith('image/')) {
-                        mediaTag = `<span><div contenteditable="false" style="white-space: nowrap; width: 10%; align-items: center; display: block;"><img id="image" class="image-container" src="${e.target.result}" alt="이미지" style="max-width: 100%; "></img></div></span>`;
-                    }
-                    contentEditor.innerHTML += '<br>'+mediaTag;
-                };
-                reader.readAsDataURL(file);
             }
         }
     </script>
