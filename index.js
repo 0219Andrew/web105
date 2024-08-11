@@ -2,7 +2,7 @@
 const express = require('express');
 const session = require('express-session');
 const mysql = require('mysql');
-const address_host = 'https://port-0-web105-lzpi9x6ic6e4a87a.sel4.cloudtype.app';
+const address_host = 'http://115.23.208.112:3000';
 
 const connection = mysql.createConnection({
     host : '115.23.208.112',
@@ -30,7 +30,7 @@ app.set('port', process.env.PORT || 3000);
 
 function authenticateUser(username, password, callback) {
     // SQL 쿼리를 사용하여 사용자 정보를 가져옴
-    connection.query('SELECT * FROM member WHERE member_id = ?', [username], (err, results) => {
+    connection.query('SELECT * FROM member WHERE member_id = ?;', [username], (err, results) => {
         if (err) {
             return callback(err);
         }
@@ -63,11 +63,17 @@ app.get('/main', function(req,res){
     }
     const cntPerPage=3;
 
-    connection.query('SELECT count(*) as total FROM post where board_id=1', (err,rows)=>{
-        if(err) throw err;
+    connection.query('SELECT count(*) as total FROM post where board_id=1;', (err,rows)=>{
+        if (err) {
+            console.error('오류 발생:', err);
+            return res.status(500).send('서버 오류가 발생했습니다.');
+        }
 
-        connection.query('SELECT * from post where board_id=1 order by post_id DESC', (err,results)=>{
-            if(err) throw err;
+        connection.query('SELECT * from post where board_id=1 order by post_id DESC;', (err,results)=>{
+            if (err) {
+                console.error('오류 발생:', err);
+                return res.status(500).send('서버 오류가 발생했습니다.');
+            }
             //console.log("results="+results[0].post_id);
             for(let i = 0;i<cntPerPage;i++){
                 //console.log("for문시작"+i);
@@ -86,7 +92,7 @@ app.get('/main', function(req,res){
                     'regdate': dateStr,
                     'title': results[i].title,
                     'content': results[i].content,
-                    'writer': results[i].writer                        
+                    'writer': results[i].writer,
                 });
                 //console.log("for문끝"+i);
                 }
@@ -114,8 +120,11 @@ app.get('/listpage', function(req,res){
     }
     const cntPerPage=10;
 
-    connection.query('SELECT count(*) as total FROM post where board_id=1', (err,rows)=>{
-        if(err) throw err;
+    connection.query('SELECT count(*) as total FROM post where board_id=1 ORDER BY post_id DESC;', (err,rows)=>{
+        if (err) {
+            console.error('오류 발생:', err);
+            return res.status(500).send('서버 오류가 발생했습니다.');
+        }
 
         console.log("rows="+rows[0].total);
         console.log("maxcnt="+cntPerPage);
@@ -125,16 +134,19 @@ app.get('/listpage', function(req,res){
         console.log("maxpage="+maxPage);
         
         if(page<1){
-            res.redirect("/listpage?page=1&member_id="+ID+"&member_pw="+PW);
+            res.redirect("/listpage?page=1");
         }
         else if(page>maxPage){
             //console.log("page>maxpage");
-            res.redirect("/listpage?page="+maxPage+"&member_id="+ID+"&member_pw="+PW);
+            res.redirect("/listpage?page="+maxPage);
         }
         else{
             //console.log("진입");
-            connection.query('SELECT * from post where board_id=1 order by post_id DESC', (err,results)=>{
-                    if(err) throw err;
+            connection.query('SELECT * from post where board_id=1 order by post_id DESC;', (err,results)=>{
+                if (err) {
+                    console.error('오류 발생:', err);
+                    return res.status(500).send('서버 오류가 발생했습니다.');
+                }
                     //console.log("results="+results[0].post_id);
                     let start= (page-1)*cntPerPage
                     let k=((results.length-start)<(start+cntPerPage))?(results.length-start):(start+cntPerPage);
@@ -149,7 +161,7 @@ app.get('/listpage', function(req,res){
                         today.getDate() == date.getDate())
                             dateStr=date.getHours()+":"+date.getMinutes();
                         else
-                            dateStr=date.getFullYear()+"."+date.getMonth()+"."+date.getDate()+" "+date.getHours()+":"+date.getMinutes();
+                            dateStr=date.getFullYear()+"-"+date.getMonth()+"-"+date.getDate()+" "+date.getHours()+":"+date.getMinutes();
                         //console.log("for문push이전"+i);
                         datas.push({
                             'id': results[i].post_id,
@@ -164,8 +176,8 @@ app.get('/listpage', function(req,res){
                         'datas' : datas,
                         'cnt' : datas.length,
                         'maxcnt' : cntPerPage,
-                        'prevPage' : ((page-1)>0)?page-1:1,
-                        'nextPage' : ((page+1)<maxPage)?page+1:maxPage,
+                        'prevPage' : page-1,
+                        'nextPage' : page+1,
                         'address_host' : address_host
                     });
                     //console.log("for문완전끝")
@@ -178,60 +190,113 @@ app.get('/listpage', function(req,res){
 app.get('/view', function(req,res){
     let datas = [];
     const postID = req.query.id;
+    postID.replace("\"","");
+    postID.replace("'","");
+    console.log("postID: "+postID);
     let k=0;
-    connection.query('SELECT * from post where board_id=1 order by post_id DESC', (err,results)=>{
-        if(err) throw err;
-        for(let i = 0; i<results.length; i++){
-            let date=results[i].regdate;
-            let dateStr;
-            dateStr=date.getFullYear()+"."+date.getMonth()+"."+date.getDate()+" "+date.getHours()+":"+date.getMinutes();
-            datas.push({
-                'id': results[i].post_id,
-                'prev_id' : 0,
-                'next_id' : 0,
-                'regdate': dateStr,
-                'title': results[i].title,
-                'content': results[i].content,
-                'writer': results[i].writer                        
-            });
-            if(i>0){
-                datas[i-1].next_id=datas[i].id;
-                datas[i].prev_id=datas[i-1].id;
-            }
-            if(results[i].post_id==postID)
-                k=i;
+    connection.query('SELECT * from post where post_id= ?;',[postID], (err,results)=>{
+        if (err) {
+            console.error('오류 발생:', err);
+            return res.status(500).send('서버 오류가 발생했습니다.');
         }
-        res.render('./view',{
-            'datas' : datas,
-            'i' : k,
-            'address_host' : address_host
+        datas.push({
+            'id': results[0].post_id,
+            'regdate': results[0].regdate,
+            'title': results[0].title,
+            'content': results[0].content,
+            'writer': results[0].writer                        
         });
-        //console.log("for문완전끝")
-    }
+    });
+    connection.query('SELECT * FROM link WHERE parent_id=?;',
+        [postID],(err,rows)=>{
+            let link_datas=[];
+            for(var i=0;i<rows.length;i++)
+                link_datas.push(rows[i].link);
+            console.log("datas[0].content: "+datas[0].content);
+            return res.render('./view',{
+                'datas' : datas[0],
+                'link' : link_datas,
+                'address_host' : address_host
+            });
+        }
+    );
+    
+    //console.log("for문완전끝")
+}
 );
-})
 
 app.get('/write', function(req,res){
+    const userId = req.session.userId;
+    if(userId==null)
+        return res.redirect('/listpage?page=1');
     res.render('write',{
         'address_host' : address_host
     })
 })
 
 app.post('/write', (req, res) => {
-    const { title, content } = req.body;
+    const { title, content , link1 , link2 , link3 , link4 , link5} = req.body;
     const userId = req.session.userId;
+    link1.trim();
+    link2.trim();
+    link3.trim();
+    link4.trim();
+    link5.trim();
+    
+    console.log('link1: '+link1);
+    console.log('link2: '+link2);
+    console.log('link3: '+link3);
+    console.log('link4: '+link4);
+    console.log('link5: '+link5);
+    
+
+    linkquery= function(post_id,link){
+        if(link != ""){
+            connection.query('INSERT INTO link (parent_id, link) VALUES (?,?);',
+                [post_id, link],(err,rows)=>{
+                if (err) {
+                    console.error('데이터베이스 삽입 중 오류 발생:', err);
+                    return res.status(500).send('서버 오류가 발생했습니다.');
+                }
+            })
+        }
+    }
 
     // SQL 쿼리 작성 및 실행
-    const sql = 'INSERT INTO post (title, content, regdate, board_id, writer) VALUES (?, ?, ?, ?, ?)';
-    connection.query(sql, [title, content, new Date(), 1, userId], (err, results) => {
+    const nowtime= new Date();
+    connection.query('INSERT INTO post (title, content, regdate, board_id, writer) VALUES (?, ?, ?, ?, ?);',
+        [title, content, nowtime, 1, userId], (err, results) => {
         if (err) {
             console.error('데이터베이스 삽입 중 오류 발생:', err);
             return res.status(500).send('서버 오류가 발생했습니다.');
         }
-        // 성공적으로 삽입된 경우, 메인 페이지로 리다이렉트
-        res.redirect('/main');
+        connection.query('SELECT * FROM post ORDER BY post_id DESC limit 1;', (err, result)=>{
+            if (err) {
+                console.error('데이터베이스 삽입 중 오류 발생:', err);
+                return res.status(500).send('서버 오류가 발생했습니다.');
+            }
+            for(var i=0;i<5;i++){
+                if(i==0)
+                    linkquery(result[0].post_id,link1);
+                else if(i==1)
+                    linkquery(result[0].post_id,link2);
+                else if(i==2)
+                    linkquery(result[0].post_id,link3);
+                else if(i==3)
+                    linkquery(result[0].post_id,link4);
+                else if(i==4)
+                    linkquery(result[0].post_id,link5);
+            }
+            return res.render('/listpage',{
+                'address_host' : address_host
+            });
+        })
+    // 성공적으로 삽입된 경우, 메인 페이지로 리다이렉트
+    res.redirect('/main');
     });
 });
+
+
 
 app.get('/signpage', function(req,res){
     res.render('signpage',{
@@ -248,16 +313,22 @@ app.post('/signpage', function(req, res) {
     console.log("Received Password: " + PWmem);
 
     // 아이디 중복 체크
-    connection.query('SELECT * FROM member WHERE member_id = ?', [IDmem], (err, results) => {
-        if (err) throw err;
+    connection.query('SELECT * FROM member WHERE member_id = ?;', [IDmem], (err, results) => {
+        if (err) {
+            console.error('오류 발생:', err);
+            return res.status(500).send('서버 오류가 발생했습니다.');
+        }
 
         if (results.length > 0) {
             console.log("이미 존재하는 아이디입니다.");
             res.send('<script>alert("이미 존재하는 아이디입니다."); window.location.href="/signpage";</script>');
         } else {
             // 아이디가 중복되지 않으면 회원 정보 삽입
-            connection.query('INSERT INTO member (member_id, member_pw) VALUES (?, ?)', [IDmem, PWmem], (err, results) => {
-                if (err) throw err;
+            connection.query('INSERT INTO member (member_id, member_pw) VALUES (?, ?);', [IDmem, PWmem], (err, results) => {
+                if (err) {
+                    console.error('오류 발생:', err);
+                    return res.status(500).send('서버 오류가 발생했습니다.');
+                }
 
                 console.log("회원가입 성공");
                 res.redirect('/loginpage');
