@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>환경 프로젝트</title>
+    <style>
+        /* 전역 스타일 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+span {
+    display: flex;
+    border: none;
+    width: 100%;
+    height: 100%;
+}
+
+p {
+    display: table-cell;
+}
+
+a {
+    text-decoration: none;
+    color: #333;
+    display: block;
+}
+
+li {
+    list-style-type: none;
+}
+
+.out_main {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #f4f4f4;
+}
+
+/* 헤더 */
+.header {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10%;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    background-color: #009688;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logo h1 {
+    color: white;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.menu {
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+}
+
+.menu li {
+    padding: 15px 20px;
+}
+
+.menu li a {
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.menu li a:hover {
+    background-color: #00796b;
+    border-radius: 4px;
+}
+
+/* 본문 */
+.main {
+    width: 100%;
+    padding-top: 100px; /* 헤더 크기만큼 패딩 추가 */
+}
+
+.present {
+    width: 80%;
+    margin: 0 auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 제목 입력 필드 스타일 */
+.title-input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* 본문 텍스트 박스 스타일 */
+.content-textarea {
+    width: 100%;
+    height: 150px;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical; /* 수직으로 크기 조절 가능 */
+    display:table;
+    table-layout: fixed;
+}
+
+/* 푸터 */
+.footer {
+    width: 100%;
+    height: 80px;
+    background-color: #009688;
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+
+.upload_ {
+    display:flex;
+}
+/* 업로드 박스 스타일 */
+.upload {
+    width: 150px;
+    height: 150px;
+    margin: 10px;
+    text-align: center;
+    border: 2px dashed #009688; /* 대시선 스타일 */
+    border-radius: 8px; /* 둥근 모서리 */
+    background-color: #f9f9f9; /* 배경색 */
+    padding-top: 15px;
+    transition: background-color 0.3s ease, border-color 0.3s ease; /* 부드러운 전환 효과 */
+}
+.upload img{
+    width: 120px;
+    height: 120px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.upload:hover , .upload img:hover{
+    background-color: #e0f2f1; /* 마우스 오버 시 배경색 변경 */
+    border-color: #00796b; /* 마우스 오버 시 테두리 색 변경 */
+}
+
+.upload_button {
+    padding: 12px 24px;
+    text-align: center;
+    background-color: #009688; /* 기본 배경색 */
+    color: white; /* 글자색 */
+    border: none; /* 기본 테두리 제거 */
+    border-radius: 4px; /* 둥근 모서리 */
+    font-size: 16px; /* 글자 크기 */
+    font-weight: bold; /* 글자 두껍게 */
+    cursor: pointer; /* 마우스 커서 포인터로 변경 */
+    transition: background-color 0.3s ease, transform 0.2s; /* 배경색 및 변환 효과 */
+    outline: none; /* 포커스 아웃라인 제거 */
+}
+
+.upload_button:hover {
+    background-color: #00796b; /* 마우스 오버 시 배경색 변경 */
+    transform: translateY(-2px); /* 버튼을 약간 위로 이동 */
+}
+
+.upload_button:active {
+    background-color: #004d40; /* 클릭 시 배경색 변경 */
+    transform: translateY(0); /* 클릭 시 원래 위치로 복귀 */
+}
+
+.form-group textarea {
+            resize: none; /* 수동 조절을 막기 위해 */
+            overflow: hidden; /* 내용에 따라 자동 조절 */
+        }
+
+    </style>
+    <!-- <link rel="stylesheet" href="write.css"> -->
+    <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+</head>
+
+<body>
+    <div class="out_main">
+        <header class="header">
+            <div class="logo">
+                <h1>환경 프로젝트</h1>
+            </div>
+
+            <!-- 메뉴 -->
+            <nav>
+                <ul class="menu">
+                    <li><a href="/main">홈페이지</a></li>
+                    <li><a href="/listpage?page=1">게시판</a></li>
+                    <li><a href="/loginpage" target="_parent">로그인</a></li>
+                    <li><a href="/signpage" target="_parent">회원가입</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- 본문 부분 -->
+        <main class="main">
+            <div class="present">
+                <form action="/write" id="form" method="post">
+                    <h2>제목 입력</h2>
+                    <form action="/write" id="form" method="post" enctype="multipart/form-data">
+                        <h2>제목 입력</h2>
+                        <input type="text" name="title" placeholder="제목을 입력하세요." class="title-input" required>
+    
+                        <h2>본문</h2>
+                        <textarea name="content" id="editor" placeholder="본문 내용을 입력하세요." class="content-textarea" required></textarea>
+    
+                        <div><button class="upload_button" type="submit">게시</button></div>
+                    </form>
+                    </div>
+                </form>
+            </div>
+        </main>
+        <script>
+            // CKEditor 적용
+            CKEDITOR.replace('editor', {
+                filebrowserUploadUrl: '/upload', // 업로드 요청을 처리할 서버의 URL
+                filebrowserUploadMethod: 'form'
+            });
+
+            // 폼 제출 전 검증 (필요할 경우 추가 가능)
+            function validateForm() {
+                const title = document.getElementById("title").value.trim();
+                if (title === "") {
+                    alert("제목을 입력해주세요.");
+                    return false;
+                }
+                return true;
+            }
+
+            document.getElementById("form").addEventListener("submit", function(event) {
+                if (!validateForm()) {
+                    event.preventDefault();
+                }
+            });
+
+            // 텍스트 영역 자동 크기 조절
+        const textarea = document.getElementById('editor');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+    
+            // 폼 제출 시 추가적인 검증 로직을 넣을 수 있음
+            function validateForm() {
+                const title = document.querySelector(".title-input").value.trim();
+                if (title === "") {
+                    alert("제목을 입력해주세요.");
+                    return false;
+                }
+                return true;
+            }
+    
+            function submitForm() {
+                if (validateForm()) {
+                    document.getElementById("form").submit();
+                }
+            }
+        </script>
+
+        <!-- 푸터 부분 -->
+        <footer class="footer">
+            <!-- 푸터 내용이 없습니다. -->
+        </footer>
+    </div>
+</body>
+
+</html>

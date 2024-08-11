@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>환경 프로젝트</title>
+    <style>
+        /* 전역 스타일 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        a {
+            text-decoration: none;
+            color: #333;
+            display: block;
+        }
+
+        li {
+            list-style-type: none;
+        }
+
+        .out_main {
+            width: 100%;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        /* 헤더 */
+        .header {
+            width: 100%;
+            height: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10%;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            background-color: #009688;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo h1 {
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .menu {
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+        }
+
+        .menu li {
+            padding: 15px 20px;
+        }
+
+        .menu li a {
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .menu li a:hover {
+            background-color: #00796b;
+            border-radius: 4px;
+        }
+
+        /* 본문 */
+        .main {
+            width: 100%;
+            padding-top: 100px; /* 헤더 크기만큼 패딩 추가 */
+        }
+
+        .present {
+            width: 80%;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 댓글 작성란 스타일 */
+        .reader {
+            margin-bottom: 20px;
+        }
+
+        /* 입력 박스 스타일 */
+        .input-box {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            width: calc(100% - 22px); /* 100%에서 패딩과 테두리 두께를 뺀 크기 */
+            margin-top: 5px;
+        }
+
+        .title-box {
+            width: calc(75% - 22px); /* 제목 박스: 3:1 비율 */
+            display: inline-block;
+        }
+
+        .author-box {
+            width: calc(25% - 22px); /* 글쓴이 박스: 3:1 비율 */
+            display: inline-block;
+        }
+        .reader-content {
+            width: 100%;
+            height: 200px;
+            border: 1px solid black;
+        }
+        /*
+        .content-box {
+            
+        }
+        */
+
+
+
+
+        /* 게시판 */
+        .post h4 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* 게시판 ul 스타일 */
+        .post ul {
+            border: 1px solid #ddd;  /* ul의 외곽선 */
+            padding: 15px 20px;      /* ul 내부의 패딩 */
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+
+        /* 페이지네이션 */
+        .pagination {
+            display: flex;
+            justify-content: space-between; /* 양쪽 끝으로 배치 */
+            margin-top: 20px; /* 위쪽 여백 추가 */
+        }
+
+        .pagination a {
+            color: #009688;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .pagination a:hover {
+            color: #00796b;
+        }
+
+        /* 푸터 */
+        .footer {
+            width: 100%;
+            height: 80px;
+            background-color: #009688;
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+    </style>
+    <!-- <link rel="stylesheet" href="style_read.css"> -->
+</head>
+
+<body>
+    <div class="out_main">
+        <div class="header">
+            <div class="logo">
+                <h1>환경 프로젝트</h1>
+            </div>
+
+            <!-- 메뉴 -->
+            <ul class="menu">
+                <li><a href="/main">홈페이지</a></li>
+                <li><a href="/listpage?page=1">게시판</a></li>
+                <li><a href="/loginpage" target="_parent">로그인</a></li>
+                <li><a href="/signpage" target="_parent">회원가입</a></li>
+            </ul>
+        </div>
+
+        <!-- 본문 부분 -->
+        <div class="main">
+            <div class="present">
+                <!-- 댓글 작성란 -->
+                <div class="reader">
+                    <div class="reader-title">
+                        <label for="title"><%= datas[i].title %></label>
+                    </div>
+
+                    <div class="reader-author">
+                        <label for="author"><%= datas[i].writer %></label>
+                    </div>
+
+                    <a href="read.html" class="row item">
+                        
+
+                    </a>
+                        
+                    <label for="content">본문</label>
+                    <div class="reader-content">
+                        <span laceholder="본문 내용을 입력하세요." contenteditable="true" id="contentEditor"><%= datas[i].content %></span>
+                    </div>
+                    <a class="row item"><div class="col_date"><%= datas[i].regdate %></div></a>
+                </div>
+
+                <!-- 게시판 -->
+                <div class="post" id="post">
+                    <div class="pagination">
+                        <a href="./view?id=<%= datas[i].next_id %>">&lt; 이전 글</a>
+                        <a href="<%= address_host %>/write">( 게시글 쓰기 )</a>
+                        <a href="./view?id=<%= datas[i].prev_id %>">&lt; 다음 글 &gt;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer"></div>
+        <script src="https://cdn.jsdelivr.net/npm/lz-string@1.4.4/libs/lz-string.min.js"></script>
+        <script>
+            contentload=function(){
+            const dom=document.getElementById("contentboxbox");
+            dom.innerHTML="";
+            dom.innerHTML+=+"<span>"+datas[i].content+"</span>";
+            }
+            /*
+            const { compress, decompress } = require('shrink-string')
+            console.log("해독 시작");
+            contentload=function(){
+                console.log("해독 시작");
+                console.log("해독 시작");
+                const dom=document.getElementById("contentboxbox");
+                dom.innerHTML="";
+                console.log("해독 시작");
+                const thing = async (s = datas[i].content) => {
+                    const expanded = await decompress(s)
+                    datas[i].content=expanded;
+                }
+                dom.innerHTML+=datas[i].content;
+            }
+            */
+        </script>
+    </div>
+</body>
+
+</html>

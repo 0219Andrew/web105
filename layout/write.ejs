@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>환경 프로젝트</title>
+    <style>
+        /* 전역 스타일 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+span {
+    display: flex;
+    border: none;
+    width: 100%;
+    height: 100%;
+}
+
+p {
+    display: table-cell;
+}
+
+a {
+    text-decoration: none;
+    color: #333;
+    display: block;
+}
+
+li {
+    list-style-type: none;
+}
+
+.out_main {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #f4f4f4;
+}
+
+/* 헤더 */
+.header {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10%;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    background-color: #009688;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logo h1 {
+    color: white;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.menu {
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+}
+
+.menu li {
+    padding: 15px 20px;
+}
+
+.menu li a {
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.menu li a:hover {
+    background-color: #00796b;
+    border-radius: 4px;
+}
+
+/* 본문 */
+.main {
+    width: 100%;
+    padding-top: 100px; /* 헤더 크기만큼 패딩 추가 */
+}
+
+.present {
+    width: 80%;
+    margin: 0 auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 제목 입력 필드 스타일 */
+.title-input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* 본문 텍스트 박스 스타일 */
+.content-textarea {
+    width: 100%;
+    height: 150px;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical; /* 수직으로 크기 조절 가능 */
+    display:table;
+    table-layout: fixed;
+}
+
+/* 푸터 */
+.footer {
+    width: 100%;
+    height: 80px;
+    background-color: #009688;
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+
+.upload_ {
+    display:flex;
+}
+/* 업로드 박스 스타일 */
+.upload {
+    width: 150px;
+    height: 150px;
+    margin: 10px;
+    text-align: center;
+    border: 2px dashed #009688; /* 대시선 스타일 */
+    border-radius: 8px; /* 둥근 모서리 */
+    background-color: #f9f9f9; /* 배경색 */
+    padding-top: 15px;
+    transition: background-color 0.3s ease, border-color 0.3s ease; /* 부드러운 전환 효과 */
+}
+.upload img{
+    width: 120px;
+    height: 120px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.upload:hover , .upload img:hover{
+    background-color: #e0f2f1; /* 마우스 오버 시 배경색 변경 */
+    border-color: #00796b; /* 마우스 오버 시 테두리 색 변경 */
+}
+
+.upload_button {
+    padding: 12px 24px;
+    text-align: center;
+    background-color: #009688; /* 기본 배경색 */
+    color: white; /* 글자색 */
+    border: none; /* 기본 테두리 제거 */
+    border-radius: 4px; /* 둥근 모서리 */
+    font-size: 16px; /* 글자 크기 */
+    font-weight: bold; /* 글자 두껍게 */
+    cursor: pointer; /* 마우스 커서 포인터로 변경 */
+    transition: background-color 0.3s ease, transform 0.2s; /* 배경색 및 변환 효과 */
+    outline: none; /* 포커스 아웃라인 제거 */
+}
+
+.upload_button:hover {
+    background-color: #00796b; /* 마우스 오버 시 배경색 변경 */
+    transform: translateY(-2px); /* 버튼을 약간 위로 이동 */
+}
+
+.upload_button:active {
+    background-color: #004d40; /* 클릭 시 배경색 변경 */
+    transform: translateY(0); /* 클릭 시 원래 위치로 복귀 */
+}
+
+
+.image-container {
+    display: block;
+    width: 100%; /* 부모 요소의 전체 너비를 차지 */
+    margin: 20px 0; /* 위아래 여백 추가 */
+}
+
+.image-container img {
+    max-width: 100%; /* 이미지가 부모 요소의 너비를 넘지 않도록 설정 */
+    height: auto; /* 이미지 비율 유지 */
+}
+
+.text-container {
+    width: 100%;
+    margin: 10px 0; /* 텍스트와 이미지 사이 여백 */
+}
+
+    </style>
+    <!-- <link rel="stylesheet" href="write.css"> -->
+    <script src="https://cdn.jsdelivr.net/npm/lz-string@1.4.4/libs/lz-string.min.js"></script>
+</head>
+
+<body>
+    <div class="out_main">
+        <header class="header">
+            <div class="logo">
+                <h1>환경 프로젝트</h1>
+            </div>
+
+            <!-- 메뉴 -->
+            <nav>
+                <ul class="menu">
+                    <li><a href="/main">홈페이지</a></li>
+                    <li><a href="/listpage">게시판</a></li>
+                    <li><a href="/loginpage" target="_parent">로그인</a></li>
+                    <li><a href="/signpage" target="_parent">회원가입</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- 본문 부분 -->
+        <main class="main">
+            <div class="present">
+            <form action="/write" id="form" method="post">
+                <h2>제목 입력</h2>
+                <input type="text" placeholder="제목을 입력하세요." class="title-input" id="title-input" name="title">
+
+                <h2>본문</h2>
+                <div class="content-textarea" id="content-textarea">
+                    <span laceholder="본문 내용을 입력하세요." contenteditable="true" id="contentEditor"></span>
+                </div>
+
+                <div class="upload_">
+                    <div class="upload" id="imageUpload">
+                        <label class="label" id="label" for="input">
+                            <div class="inner" id="inner">이미지 업로드</div>
+                        </label>
+                        <input id="imageInput" class="input" accept="image/*" type="file" multiple="true">
+                    </div>
+                </div>
+                <input id="content-input" name="content" style="display:none">
+            </form>
+                <div><button class="upload_button" onclick="submitForm()">게시</button></div>
+            </div>
+        </main>
+
+        <!-- 푸터 부분 -->
+        <footer class="footer">
+            <!-- 푸터 내용이 없습니다. -->
+        </footer>
+    </div>
+
+    <script>
+        alert("로그인하지 않고 글 작성 시 글이 날아가요! 로그인 했는지 안했는지 확인하는 코드 짜기 힘드니까 로그인 한 번만 더 하세요.");
+        function validateForm() {
+            const iddom = document.getElementById("title-input");
+            const contentdom = document.getElementById("contentEditor");
+            const passworddom = document.getElementById("content-input");
+            passworddom.value=contentdom.innerHTML;
+            const title = iddom.value.trim();
+            const content = passworddom.value;
+            console.log("content: "+content);
+            
+            if (title.length > 255) {
+                alert("제목을 255자 내로 입력해주세요.");
+                return false;
+            } else if (title === "") {
+                alert("아이디를 입력해주세요.");
+                return false;
+            } else if (content === "") {
+                alert("비밀번호를 입력해주세요.");
+                return false;
+            } else {
+                /*
+                const thing = async (s = content) => {
+                    const shrunk = await compress(s)
+                    passworddom.value=shrunk;
+                }
+                */
+                return true
+            }
+        }
+
+        function submitForm() {
+            if (validateForm()) {
+                document.getElementById("form").submit();
+            }
+        }
+
+
+
+        const contentEditor = document.getElementById('contentEditor');
+        const contenttextarea = document.getElementById('ppp');
+
+        // 이미지 파일을 선택하거나 드롭하면 처리
+        document.getElementById('imageInput').addEventListener('change', handleFiles);
+        document.getElementById('imageUpload').addEventListener('dragover', handleDragOver);
+        document.getElementById('imageUpload').addEventListener('drop', (event) => handleDrop(event, 'image'));
+
+        // 비디오 파일을 선택하거나 드롭하면 처리
+        document.getElementById('videoInput').addEventListener('change', handleFiles);
+        document.getElementById('videoUpload').addEventListener('dragover', handleDragOver);
+        document.getElementById('videoUpload').addEventListener('drop', (event) => handleDrop(event, 'video'));
+
+        function handleDragOver(event) {
+            event.preventDefault();
+        }
+
+        function handleDrop(event, type) {
+            event.preventDefault();
+            const files = event.dataTransfer.files;float: left;
+            if (files.length > 0) {
+                handleFiles({ target: { files: files } }, type);
+            }
+        }
+
+        function handleFiles(event, type) {
+            const files = event.target.files;
+            for (let file of files) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    let mediaTag = '';
+                    if (file.type.startsWith('image/')) {
+                        mediaTag = `<span><div contenteditable="false" style="white-space: nowrap; width: 10%; align-items: center; display: block;"><img id="image" class="image-container" src="${e.target.result}" alt="이미지" style="max-width: 100%; "></img></div></span>`;
+                    }
+                    contentEditor.innerHTML += '<br>'+mediaTag;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+
+</html>

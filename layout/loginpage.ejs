@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>log In</title>
+</head>
+<body>
+    <form id="login" action="/loginpage" method="post">
+    <h1> Log In</h1>
+    <br>
+
+
+    ID
+    <input type="text" id="ID" name="username">
+    <br>
+
+
+    Password
+    <input type="password" id="PW" name="password">
+    <br>
+
+    <br>
+    </form>
+    <button onclick="submitForm()">login</button>
+
+    <br><br>
+    <a href="/main">홈페이지로 돌아가기</a>
+    <br>
+    <a href="/signpage">회원가입 페이지 가기</a>
+    <script>
+        function validateForm() {
+            const iddom = document.getElementById("ID");
+            const passworddom = document.getElementById("PW");
+            const IDmem = iddom.value.trim();
+            const PWmem = passworddom.value.trim();
+            
+            if (IDmem.length > 20) {
+                alert("아이디를 20자 내로 입력해주세요.");
+                return false;
+            } else if (PWmem.length > 45) {
+                alert("비밀번호를 45자 내로 입력해주세요.");
+                return false;
+            } else if (IDmem === "") {
+                alert("아이디를 입력해주세요.");
+                return false;
+            } else if (PWmem === "") {
+                alert("비밀번호를 입력해주세요.");
+                return false;
+            } else {
+                return true;
+            }
+        }
+    
+        function submitForm() {
+            if (validateForm()) {
+                document.getElementById("login").submit();
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in</title>
+</head>
+<body>
+    <form id="signin" action="/signpage" method="post">
+    <h1> Sign in</h1>
+    <br>
+
+
+    ID
+    <input type="text" id="IDmember" name="IDmember">
+    <br>
+
+
+    Password
+    <input type="password" id="PWmember" name="PWmember">
+    <br>
+
+    <br>
+    </form>
+    <button onclick="submitForm()">Sign in</button>
+
+    <br><br>
+    <a href="/main">홈페이지로 돌아가기</a> <br>
+    <a href="/loginpage">로그인 페이지로 가기</a>
+    <script>
+    function validateForm() {
+        const iddom = document.getElementById("IDmember");
+        const passworddom = document.getElementById("PWmember");
+        const IDmem = iddom.value.trim();
+        const PWmem = passworddom.value.trim();
+        
+        if (IDmem.length > 20) {
+            alert("아이디를 20자 내로 입력해주세요.");
+            return false;
+        } else if (PWmem.length > 45) {
+            alert("비밀번호를 45자 내로 입력해주세요.");
+            return false;
+        } else if (IDmem === "") {
+            alert("아이디를 입력해주세요.");
+            return false;
+        } else if (PWmem === "") {
+            alert("비밀번호를 입력해주세요.");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function submitForm() {
+        if (validateForm()) {
+            document.getElementById("signin").submit();
+        }
+    }
+    </script>
+</body>
+</html>
