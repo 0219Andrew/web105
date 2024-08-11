@@ -212,7 +212,7 @@ app.get('/view', function(req,res){
 })
 
 app.get('/write', function(req,res){
-    res.render('./write',{
+    res.render('write',{
         'address_host' : address_host
     })
 })
