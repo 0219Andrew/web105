@@ -68,14 +68,14 @@ app.get('/main', function(req,res){
             console.error('오류 발생:', err);
             return res.status(500).send('서버 오류가 발생했습니다.');
         }
-
+        totalCnt=rows[0].total;
         connection.query('SELECT * from post where board_id=1 order by post_id DESC;', (err,results)=>{
             if (err) {
                 console.error('오류 발생:', err);
                 return res.status(500).send('서버 오류가 발생했습니다.');
             }
             //console.log("results="+results[0].post_id);
-            for(let i = 0;i<cntPerPage;i++){
+            for(let i = 0;i<((totalCnt>cntPerPage)?cntPerPage:totalCnt);i++){
                 //console.log("for문시작"+i);
                 let date=results[i].regdate;
                 let today= new Date();
